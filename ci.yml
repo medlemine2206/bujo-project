@@ -1,0 +1,25 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  quality-and-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: PEP 8 (flake8)
+        run: flake8 bujo tests
+
+      - name: Docstrings (pydocstyle)
+        run: pydocstyle bujo
+
+      - name: Tests unitaires + couverture
+        run: pytest --cov=bujo --cov-report=term-missing
